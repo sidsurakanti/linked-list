@@ -1,10 +1,8 @@
-# node class
 class node:
     def __init__(self, data=None):
         self.data = data
         self.next = None
 
-# linked list class
 class linked_list:
     def __init__(self):
         self.head = node(None) #head node, unaccesable by the user
@@ -68,10 +66,40 @@ class linked_list:
     # use [] instead of (method:self.get) to get item at certain index
     def __getitem__(self, index):
         return self.get(index)
-    
 
-ll = linked_list()
-ll.append(2)
-ll.append("hello")
-print(ll[1])
-ll.display()
+    # checks if (param:self) and (param:value) are the same
+    def __eq__(self, value):
+        if self == value:
+            return True
+        else:
+            return False
+    
+    # checks if (param:self) is greater than or equal to (param:value)
+    def __ge__(self, value):
+        if self >= value:
+            return True
+        else:
+            return False
+    
+    # checks if (param:self) is greater than (param:value)
+    def __gt__(self, value):
+        if self > value:
+            return True
+        else:
+            return False
+    
+    # checks if (param:self) is less than or equal to (param:value)
+    def __le__(self, value):
+        if self <= value:
+            return True
+        else:
+            return False
+
+    # checks if (param:self) is less than or equal to (param:value)
+    def __lt__(self, value):
+        if self < value:
+            return True
+        else:
+            return False
+    
+        
