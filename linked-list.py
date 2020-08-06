@@ -1,8 +1,10 @@
+# node class
 class node:
     def __init__(self, data=None):
         self.data = data
         self.next = None
 
+# linked list class
 class linked_list:
     def __init__(self):
         self.head = node(None) #head node, unaccesable by the user
@@ -72,3 +74,4 @@ ll = linked_list()
 ll.append(2)
 ll.append("hello")
 print(ll[1])
+ll.display()
