@@ -1,150 +1,60 @@
-###LINKED LIST
-
-class Node:
-    def __init__(self, data=None):
-        self.data = data 
-        self.next = None #next node default to None
-
+from node import Node
 
 
 class LinkedList:
     def __init__(self):
-        self.head = Node(None) #head node, unaccesable by the user
-        self.size = 0  #size of the linked list
+        self.head = Node()  # sets head node as a empty instance of the class Node so it's inaccessible to the user
+        self.size = 0  # size of the linked list instance
 
+    def append(self, data, index: int = None):
+        """adds :param data: to the index :param index: of the linked list"""
+        data = Node(data)  # creates a new instance of the class Node with data <data>
+        current = self.head  # sets current node as the head node since it's the first node in the linked list
+        index = index or self.size  # sets index to <index> if <index> otherwise to the length of the linked list
+        count = 0
 
-    # adds another node that contains (param:data) to the end of the list
-    def append(self, obj):
-        new_node = Node(obj)
-        current = self.head
+        # while the index of the current node is smaller than index
+        while count < index:
+            current = current.next
+            count += 1
+
+        current.next = data
         self.size += 1
-        while (current.next != None):
+        return
+
+    def __len__(self):
+        """Dunder-method for len() built-in function"""
+        return self.size
+
+    def __str__(self):
+        """Dunder-method for printing"""
+        current = self.head  # sets current node to <self.head>
+        data = []
+
+        # loops thru all the nodes in the list and adds the node's data to <data>
+        while current.next is not None:
+            data.append(current.next.data)
             current = current.next
 
-        current.next = new_node
-    
+        return str(data)
 
-    # prints out the items of the linked list in a regular list
-    def display(self):
-        items = []
-        current = self.head
-        while (current.next != None):
-            items.append(current.next.data)
-            current = current.next
-
-        print(items)
-    
-
-    # returns the length of the linked list as an integer
-    def length(self):
-        count = 0
-        current = self.head
-        while (current.next != None):
-            count += 1
-            current = current.next
-        
-        return count
-    
-
-    # returns the value of the node at (param:index)
-    def get(self, index):
-        if (self.size >= index >= 0):
-            current = self.head
-            for i in range(0, index + 1):
-                current = current.next
-            return current.data
-        else:
-            return IndexError
-
-
-    # deletes node at certain index
-    def delete(self, index=0):
-        count = 0
-        last_node = self.head
-        while True:
-            current_node = last_node.next
-            if (count == index):
-                last_node.next = current_node.next
-                return
-
-            count += 1
-            last_node = last_node.next
-
-
-    # deletes the node at the index(default to -1) of linked list and returns it
-    def pop(self, index=None):
-        if (index != None):
-            popped_node = self.get(index) #gets the data of the node at (param:index)
-            self.delete(index)    
-            return popped_node
-        else:
-            current = self.head
-            count = 0
-            while (current.next != None):
-                current = current.next
-                count += 1
-            popped_node = current.data
-            self.delete(count)
-            return popped_node
-        
-
-    # converts the linked list into a list and returns the list
-    def convert_list(self):
-        items = []
-        current = self.head
-        while (current.next != None):
-            items.append(current.next.data)
-            current = current.next
-        
-        return items
-
-
-    # converts the linked list into a string
-    def convert_string(self):
-        string = ''.join([str(i) for i in self.convert_list()]) #turns the converted list into a string
-        return string
-
-
-    # use [] instead of (method:self.get) to get item at certain index
+    # TODO: Add support for slicing
     def __getitem__(self, index):
-        return self.get(index)
+        """Dunder-method for slicing"""
+        current = self.head  # sets current node to <self.head>
+        count = 0
+
+        # while index of current node is smaller than the <index>
+        while count < index:
+            current = current.next
+            count += 1
+        current = current.next
+
+        return current.data
 
 
-    # checks if (param:self) and (param:value) are the same
-    def __eq__(self, value):
-        if (self == value):
-            return True
-        else:
-            return False
-    
+l1 = LinkedList()
+l1.append(0)
+l1.append(1)
+print(l1[0])
 
-    # checks if (param:self) is greater than or equal to (param:value)
-    def __ge__(self, value):
-        if (self >= value):
-            return True
-        else:
-            return False
-    
-
-    # checks if (param:self) is greater than (param:value)
-    def __gt__(self, value):
-        if (self > value):
-            return True
-        else:
-            return False
-    
-
-    # checks if (param:self) is less than or equal to (param:value)
-    def __le__(self, value):
-        if (self <= value):
-            return True
-        else:
-            return False
-
-
-    # checks if (param:self) is less than or equal to (param:value)
-    def __lt__(self, value):
-        if (self < value):
-            return True
-        else:
-            return False
