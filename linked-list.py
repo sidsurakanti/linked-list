@@ -1,148 +1,191 @@
-###LINKED LIST
+import copy as cp
 
-class Node:
-    def __init__(self, data=None):
-        self.data = data 
-        self.next = None #next node default to None
-
+from node import Node
 
 
 class LinkedList:
     def __init__(self):
-        self.head = Node(None) #head node, unaccesable by the user
-        self.size = 0  #size of the linked list
+        self.head = Node()  # empty instance of class Node
+        self.size = 0  # size of the linked list instance
 
-
-    # adds another node that contains (param:data) to the end of the list
-    def append(self, obj):
-        new_node = Node(obj)
-        current = self.head
+    def append(self, data):
+        """Adds data to the end of the linked list"""
+        self.insert(data)
         self.size += 1
-        while (current.next != None):
-            current = current.next
 
-        current.next = new_node
-    
+    def get(self, index: int = 1):
+        """Gets the data of the node at :param index:"""
+        index = self.size - (index * -1) if index < 0 else index
 
-    # prints out the items of the linked list in a regular list
-    def display(self):
-        items = []
-        current = self.head
-        while (current.next != None):
-            items.append(current.next.data)
-            current = current.next
-
-        print(items)
-    
-
-    # returns the length of the linked list as an integer
-    def length(self):
-        count = 0
-        current = self.head
-        while (current.next != None):
-            count += 1
-            current = current.next
-        
-        return count
-    
-
-    # returns the value of the node at (param:index)
-    def get(self, index):
-        if (self.size >= index >= 0):
-            current = self.head
-            for i in range(0, index + 1):
-                current = current.next
-            return current.data
-        else:
-            return IndexError
-
-
-    # deletes node at certain index
-    def delete(self, index=0):
-        count = 0
-        last_node = self.head
-        while True:
-            current_node = last_node.next
-            if (count == index):
-                last_node.next = current_node.next
-                return
-
-            count += 1
-            last_node = last_node.next
-
-
-    # deletes the node at the index(default to -1) of linked list and returns it
-    def pop(self, index=None):
-        if (index != None):
-            popped_node = self.get(index) #gets the data of the node at (param:index)
-            self.delete(index)    
-            return popped_node
-        else:
-            current = self.head
+        if 0 <= index <= (self.size - 1):
+            current = self.head  # sets current node to <self.head>
             count = 0
-            while (current.next != None):
+
+            # while index of current node is smaller than the <index>
+            while count < index:
                 current = current.next
                 count += 1
-            popped_node = current.data
-            self.delete(count)
-            return popped_node
-        
 
-    # converts the linked list into a list and returns the list
-    def convert_list(self):
-        items = []
-        current = self.head
-        while (current.next != None):
-            items.append(current.next.data)
             current = current.next
-        
-        return items
+            return current
 
+    def display(self):
+        """Returns the data of all the nodes in the linked list"""
+        current = self.head  # sets current node to <self.head>
+        data = []
 
-    # converts the linked list into a string
-    def convert_string(self):
-        string = ''.join([str(i) for i in self.convert_list()]) #turns the converted list into a string
-        return string
+        # loops thru all the nodes in the list and adds the node's data to <data>
+        while current.next is not None:
+            data.append(current.next.data)
+            current = current.next
 
+        return data
 
-    # use [] instead of (method:self.get) to get item at certain index
-    def __getitem__(self, index):
-        return self.get(index)
+    def insert(self, data, index: int = None):
+        """Inserts data to index :param index: of the linked list"""
+        try:
+            data = Node(data)
+            index = index or self.size
+            current = self.head
+            count = 0
 
+            while count < index:  # while index is greater than count
+                current = current.next
+                count += 1
+            last_node = current.next
+            current.next = data
+            current.next.next = last_node
+            return
 
-    # checks if (param:self) and (param:value) are the same
+        except AttributeError:
+            print('Please provide a valid index')
+
+    def count(self, value):
+        """Counts the no. of times :param value: appears in the linked list"""
+        items = self.display()
+        return items.count(value)
+
+    def pop(self, index: int = 0):
+        """Deletes the node at :param index: and returns its data"""
+        item = self.get(index).data
+        self.delete(index)
+        return item
+
+    def clear(self):
+        """Clears the linked list"""
+        self.head = Node()
+        self.size = 0
+
+    def extend(self, iterable):
+        """Extends the linked list with :param iterable:"""
+        # loops thru each item in <iterable> and adds it to the linked list
+        for item in iterable:
+            self.append(item)
+
+        return
+
+    def sort(self):
+        """Sorts the linked list in ascending order"""
+        lst = self.display()
+        self.clear()
+        self.extend(sorted(lst))
+        return
+
+    def delete(self, key=0):
+        """Deletes an object from the linked list"""
+        # if <key> is a instance of class int
+        if isinstance(key, int):
+            last_node = self.head
+            count = 0
+
+            while True:
+                current_node = last_node.next
+                if count == key:
+                    last_node.next = current_node.next
+                    self.size -= 1
+                    return
+
+                count += 1
+                last_node = last_node.next
+
+        # if <key> is a instance of class slice
+        elif isinstance(key, slice):
+            items = self.display()
+            length = len(items[key])
+            del items[key]
+            self.clear()
+            self.extend(items)
+            self.size -= length
+
+            return
+
+    def copy(self):
+        """Returns a copy of the linked list"""
+        return self.__copy__()
+
+    def deepcopy(self):
+        """Returns a deepcopy of the linked list"""
+        return self.__deepcopy__()
+
+    def __del__(self):
+        """Dunder method for deleting an instance of the LinkedList class"""
+        del self
+        return
+
+    def __len__(self):
+        """Dunder-method for the built-in len() function"""
+        return self.size
+
+    def __str__(self):
+        """Dunder-method for printing"""
+        return str(self.display())
+
+    def __copy__(self):
+        lst = LinkedList()
+        lst.extend(self.display())
+        return lst
+
+    def __deepcopy__(self):
+        lst = LinkedList()
+        for node in self:
+            lst.append(cp.deepcopy(node.data))
+        return lst
+
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            return self.get(key).data
+
+        elif isinstance(key, slice):
+            items = self.display()
+            return items[key]
+
+    def __delitem__(self, key):
+        self.delete(key)
+
     def __eq__(self, value):
         if (self == value):
             return True
         else:
             return False
-    
 
-    # checks if (param:self) is greater than or equal to (param:value)
     def __ge__(self, value):
         if (self >= value):
             return True
         else:
             return False
-    
 
-    # checks if (param:self) is greater than (param:value)
     def __gt__(self, value):
         if (self > value):
             return True
         else:
             return False
-    
 
-    # checks if (param:self) is less than or equal to (param:value)
     def __le__(self, value):
         if (self <= value):
             return True
         else:
             return False
 
-
-    # checks if (param:self) is less than or equal to (param:value)
     def __lt__(self, value):
         if (self < value):
             return True
